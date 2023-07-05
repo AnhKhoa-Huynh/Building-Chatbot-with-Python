@@ -1,15 +1,19 @@
-console.log('Welcome to the game!');
+console.log('Welcome to the rock, paper, scissors game!');
+
+let userPoints = 0;
+let computerPoints = 0;
+
 const getUserChoice = userInput => {
   userInput = userInput.toLowerCase();
-  if (userInput === 'rock' || userInput === 'paper' || userInput === 'scissors'|| userInput === 'bomb') {
+  if (userInput === 'rock' || userInput === 'paper' || userInput === 'scissors' || userInput === 'theLittleBoy') {
     return userInput;
   } else {
     console.log('Please enter a valid choice!');
   }
-}
-//the second function
+};
+
 const getComputerChoice = () => {
-  const randomNumber = Math.floor(Math.random()*3);
+  const randomNumber = Math.floor(Math.random() * 3);
   switch (randomNumber) {
     case 0:
       return 'rock';
@@ -20,48 +24,57 @@ const getComputerChoice = () => {
   }
 };
 
-//the third function
 const determineWinner = (userChoice, computerChoice) => {
   if (userChoice === computerChoice) {
-    return 'The game was a tie!';
+    return 'It\'s a tie!';
   }
-  //Inner if 1
   if (userChoice === 'rock') {
     if (computerChoice === 'paper') {
-      return 'The computer won!';
+      computerPoints++;
+      return 'The computer wins!';
     } else {
-      return 'The user won!';
+      userPoints++;
+      return 'You win!';
     }
   }
-  // Inner if 2
   if (userChoice === 'paper') {
     if (computerChoice === 'scissors') {
-      return 'The computer won!';
+      computerPoints++;
+      return 'The computer wins!';
     } else {
-      return 'The user won!';
+      userPoints++;
+      return 'You win!';
     }
   }
-  //Inner if 3
   if (userChoice === 'scissors') {
     if (computerChoice === 'rock') {
-      return 'The computer won!'
+      computerPoints++;
+      return 'The computer wins!';
     } else {
-      return 'The user won!';
+      userPoints++;
+      return 'You win!';
     }
   }
-  if (userChoice === 'bomb') {
-    return 'WTF! Didn\'t see that comming!';
+  if (userChoice === 'theLittleBoy') {
+    userPoints++;
+    return 'You used a secret weapon! You win!';
   }
-}
+};
 
-//Another function
 const playGame = () => {
-  let userChoice = getUserChoice('bomb'); 
+  let userChoice = getUserChoice('bomb');
   let computerChoice = getComputerChoice();
-  console.log(`You threw ${userChoice}.`);
-  console.log(`The computer threw ${computerChoice}. `);
-
+  console.log(`You chose: ${userChoice}`);
+  console.log(`The computer chose: ${computerChoice}`);
   console.log(determineWinner(userChoice, computerChoice));
-}
+  
+  console.log(`Player Points: ${userPoints}`);
+  console.log(`Computer Points: ${computerPoints}`);
+  
+  if (userPoints >= 5) {
+    let dollarsEarned = Math.floor(userPoints / 5);
+    console.log(`Congratulations! You have earned $${dollarsEarned}.`);
+  }
+};
 
 playGame();
