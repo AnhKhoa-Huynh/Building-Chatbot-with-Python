@@ -1,0 +1,127 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// ---------- helpers ----------
+static inline string trim(string s) {
+    auto not_space = [](int ch){ return !std::isspace(ch); };
+    s.erase(s.begin(), find_if(s.begin(), s.end(), not_space));
+    s.erase(find_if(s.rbegin(), s.rend(), not_space).base(), s.end());
+    return s;
+}
+
+static inline string to_lower(string s) {
+    transform(s.begin(), s.end(), s.begin(), [](unsigned char c){ return std::tolower(c); });
+    return s;
+}
+
+void print_message() {
+    cout << "I'm sorry, I did not understand your selection. Please enter a valid option." << endl;
+}
+
+string get_line() {
+    string s;
+    getline(cin, s);
+    return s;
+}
+
+// ---------- menus ----------
+string get_size() {
+    while (true) {
+        cout << "What size drink can I get for you? \n[a] Small \n[b] Medium \n[c] Large \n> ";
+        string res = to_lower(trim(get_line()));
+        if (res == "a" || res == "small")  return "small";
+        if (res == "b" || res == "medium") return "medium";
+        if (res == "c" || res == "large")  return "large";
+        print_message();
+    }
+}
+
+string order_latte() {
+    while (true) {
+        cout << "And what kind of milk for your latte? \n[a] 2% milk \n[b] Non-fat milk \n[c] Soy milk \n> ";
+        string res = to_lower(trim(get_line()));
+        if (res == "a" || res.find("2%") != string::npos)     return "2% milk latte";
+        if (res == "b" || res.find("non-fat") != string::npos) return "non-fat latte";
+        if (res == "c" || res.find("soy") != string::npos)      return "soy latte";
+        print_message();
+    }
+}
+
+string order_mocha() {
+    while (true) {
+        cout << "Would you like to try our limited-edition peppermint mocha? \n[a] Sure! \n[b] Maybe next time! \n> ";
+        string res = to_lower(trim(get_line()));
+        if (res == "a" || res == "yes" || res == "y" || res == "sure") return "peppermint mocha";
+        if (res == "b" || res == "no"  || res == "n" || res == "nah")  return "mocha";
+        print_message();
+    }
+}
+
+string get_drink_type() {
+    while (true) {
+        cout << "What type of drink would you like? \n[a] Brewed Coffee \n[b] Mocha \n[c] Latte \n> ";
+        string res = to_lower(trim(get_line()));
+        if (res == "a" || res.find("brewed") != string::npos || res.find("coffee") != string::npos)
+            return "brewed coffee";
+        if (res == "b" || res.find("mocha") != string::npos)
+            return order_mocha();
+        if (res == "c" || res.find("latte") != string::npos)
+            return order_latte();
+        print_message();
+    }
+}
+
+// ---------- main flow ----------
+void coffee_bot() {
+    cout << "Welcome to the cafe!" << endl;
+
+    string order_drink = "a";
+    vector<string> drinks;
+
+    auto wants_more = [](const string& s){
+        string t = to_lower(trim(s));
+        return (t == "a" || t == "yes" || t == "yeah" || t == "y" || t == "sure");
+    };
+    auto says_no = [](const string& s){
+        string t = to_lower(trim(s));
+        return (t == "b" || t == "no" || t == "nah" || t == "n");
+    };
+
+    while (wants_more(order_drink)) {
+        string size = get_size();
+        string type = get_drink_type();
+        string drink = size + " " + type;
+        cout << "Alright, that's a " << drink << "!" << endl;
+        drinks.push_back(drink);
+
+        cout << "Would you like to order another drink? \n[a] Yes \n[b] No \n> ";
+        order_drink = get_line();
+        if (says_no(order_drink)) break;
+        // otherwise loop continues if they said yes/yeah/sure
+    }
+
+    cout << "Ok, so I have:" << endl;
+
+    unordered_map<string,int> count;
+    for (const auto& d : drinks) count[d]++;
+
+    if (drinks.empty()) {
+        cout << "- (no drinks)" << endl;
+    } else {
+        for (const auto& [drink, c] : count) {
+            if (c == 1) cout << "- a " << drink << '\n';
+            else        cout << "- " << c << " cups of " << drink << '\n';
+        }
+    }
+
+    cout << "Can I get your name please? \n> ";
+    string name = get_line();
+    cout << "Thanks, " << name << "! Your order will be ready shortly." << endl;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    coffee_bot();
+    return 0;
+}
