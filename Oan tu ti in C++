@@ -1,0 +1,113 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int userPoints = 0;
+int computerPoints = 0;
+
+string to_lowercase(string s) {
+    transform(s.begin(), s.end(), s.begin(), [](unsigned char c){ return tolower(c); });
+    return s;
+}
+
+string getUserChoice(const string& input) {
+    string userInput = to_lowercase(input);
+    if (userInput == "rock" || userInput == "paper" || userInput == "scissors" || userInput == "thelittleboy") {
+        return userInput;
+    } else {
+        cout << "Please enter a valid choice!" << endl;
+        return "";
+    }
+}
+
+string getComputerChoice() {
+    int randomNumber = rand() % 3;
+    switch (randomNumber) {
+        case 0: return "rock";
+        case 1: return "paper";
+        case 2: return "scissors";
+    }
+    return "rock"; // fallback
+}
+
+string determineWinner(const string& userChoice, const string& computerChoice) {
+    if (userChoice == computerChoice) {
+        return "It's a tie!";
+    }
+
+    if (userChoice == "rock") {
+        if (computerChoice == "paper") {
+            computerPoints++;
+            return "The computer wins!";
+        } else {
+            userPoints++;
+            return "You win!";
+        }
+    }
+
+    if (userChoice == "paper") {
+        if (computerChoice == "scissors") {
+            computerPoints++;
+            return "The computer wins!";
+        } else {
+            userPoints++;
+            return "You win!";
+        }
+    }
+
+    if (userChoice == "scissors") {
+        if (computerChoice == "rock") {
+            computerPoints++;
+            return "The computer wins!";
+        } else {
+            userPoints++;
+            return "You win!";
+        }
+    }
+
+    if (userChoice == "thelittleboy") {
+        userPoints++;
+        return "You used a secret weapon! You win!";
+    }
+
+    return "Invalid choice!";
+}
+
+void playGame() {
+    cout << "Welcome to the Rock, Paper, Scissors game!" << endl;
+
+    while (true) {
+        cout << "\nEnter your choice (rock, paper, scissors, or theLittleBoy): ";
+        string userInput;
+        getline(cin, userInput);
+
+        string userChoice = getUserChoice(userInput);
+        if (userChoice.empty()) continue; // invalid input → re-ask
+
+        string computerChoice = getComputerChoice();
+
+        cout << "You chose: " << userChoice << endl;
+        cout << "The computer chose: " << computerChoice << endl;
+
+        cout << determineWinner(userChoice, computerChoice) << endl;
+        cout << "Player Points: " << userPoints << " | Computer Points: " << computerPoints << endl;
+
+        if (userPoints >= 5) {
+            int dollarsEarned = userPoints / 5;
+            cout << "🎉 Congratulations! You have earned $" << dollarsEarned << "." << endl;
+        }
+
+        cout << "\nPlay again? (y/n): ";
+        string again;
+        getline(cin, again);
+        if (to_lowercase(again) != "y" && to_lowercase(again) != "yes") break;
+    }
+
+    cout << "\nFinal Score -> You: " << userPoints << " | Computer: " << computerPoints << endl;
+    cout << "Thanks for playing!" << endl;
+}
+
+int main() {
+    srand(static_cast<unsigned>(time(nullptr)));
+    playGame();
+    return 0;
+}
